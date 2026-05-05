@@ -1,0 +1,45 @@
+# ── Ghostty config ────────────────────────────────────────────────────────────
+# macOS only — RHEL8 uses SSH from here
+
+theme = catppuccin-mocha
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+font-feature = calt
+font-feature = liga
+
+# Window
+window-padding-x = 8
+window-padding-y = 8
+window-decoration = true
+macos-titlebar-style = hidden
+
+# Cursor
+cursor-style = bar
+cursor-style-blink = true
+cursor-opacity = 1.0
+
+# Performance
+fps-cap = 120
+
+# Shell
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# Copy/paste
+copy-on-select = clipboard
+clipboard-trim-trailing-spaces = true
+
+# Scrollback
+scrollback-limit = 10000
+
+# Key bindings
+keybind = cmd+shift+enter=new_window
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+w=close_surface
+keybind = cmd+shift+[=previous_tab
+keybind = cmd+shift+]=next_tab
+keybind = cmd+k=clear_screen
+
+# macOS: use Option as Meta (for nvim alt-keys)
+macos-option-as-alt = true

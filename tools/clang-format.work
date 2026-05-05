@@ -1,0 +1,35 @@
+---
+# clang-format.work — BDE (Bloomberg Default Environment) style
+# Reference: https://github.com/bloomberg/bde/wiki/bde-style-guide
+BasedOnStyle: LLVM
+Standard: c++17
+
+ColumnLimit: 79         # BDE is strict 79 chars
+IndentWidth: 4
+ContinuationIndentWidth: 4
+AccessModifierOffset: -4
+
+# BDE: braces on same line for functions/classes
+BreakBeforeBraces: Attach
+
+# BDE uses 2-space indent for access specifiers
+# (adjust if your team differs)
+
+# Includes
+SortIncludes: CaseSensitive
+
+# BDE-style alignment
+AlignConsecutiveAssignments: false
+AlignOperands: Align
+
+PointerAlignment: Left
+SpaceBeforeParens: ControlStatements
+
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+
+# BDE: // = separator comments
+# No automated handling — just style reference
+
+# Note: for full BDE compliance, use bde-verify + bde-format
+# bde-format wraps clang-format with BDE-specific post-processing

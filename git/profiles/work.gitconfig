@@ -1,0 +1,15 @@
+# git/profiles/work.gitconfig
+# Bloomberg work identity
+
+[user]
+    name  = Divy Bhargava
+    email = dbhargava@bloomberg.net
+    # signingkey = YOUR_WORK_KEY
+
+# Bloomberg Gerrit remote helper (if needed)
+# [url "ssh://dbhargava@gerrit.bloomberg.com/"]
+#     insteadOf = bb:
+
+# Proxy if corporate network requires it
+# [http]
+#     proxy = http://proxy.bloomberg.net:8080

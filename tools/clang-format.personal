@@ -1,0 +1,28 @@
+---
+# clang-format.personal — Google-derived style, C++23
+BasedOnStyle: Google
+Standard: c++23
+
+ColumnLimit: 100
+IndentWidth: 4
+ContinuationIndentWidth: 4
+AccessModifierOffset: -4
+
+# Braces
+BreakBeforeBraces: Attach
+
+# Includes
+IncludeBlocks: Regroup
+SortIncludes: CaseSensitive
+
+# Alignment
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignOperands: true
+
+# Misc
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+SpaceBeforeParens: ControlStatements
+PointerAlignment: Left
