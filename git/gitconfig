@@ -1,0 +1,52 @@
+[core]
+  excludesfile = ~/.gitignore_global
+  autocrlf     = input
+  pager        = delta
+
+[init]
+  defaultBranch = main
+
+[merge]
+  conflictstyle = zdiff3
+
+[diff]
+  colorMoved = default
+
+[pull]
+  rebase = true
+
+[rebase]
+  autoStash = true
+
+[push]
+  default      = current
+  autoSetupRemote = true
+
+[fetch]
+  prune = true
+
+# delta — better diffs
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate   = true
+  dark       = true
+  line-numbers = true
+  syntax-theme = Catppuccin-mocha
+  side-by-side = false
+
+# Load profile-specific identity (email, signing key)
+[include]
+  path = ~/.dotfiles/git/profiles/active.gitconfig
+
+[alias]
+  st   = status -sb
+  lg   = log --oneline --graph --decorate --all
+  lga  = log --oneline --graph --decorate
+  co   = checkout
+  br   = branch
+  cp   = cherry-pick
+  undo = reset HEAD~1 --mixed
+  wip  = "!git add -A && git commit -m 'WIP'"
+  fixup = "!git log --oneline | head -20 | fzf | awk '{print $1}' | xargs git commit --fixup"

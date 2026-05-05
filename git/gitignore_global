@@ -1,0 +1,46 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.project
+
+# Build artifacts
+build/
+dist/
+out/
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv
+venv/
+.ruff_cache/
+.mypy_cache/
+
+# Logs
+*.log
+logs/
+
+# Neovim session files
+Session.vim
+.nvim/

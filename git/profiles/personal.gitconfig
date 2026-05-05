@@ -1,18 +1,6 @@
-# git/profiles/personal.gitconfig
-# fill in your real details
-
 [user]
-    name  = Divy Bhargava
-    email = your-personal@email.com
-    # signingkey = YOUR_GPG_OR_SSH_KEY
+  name  = Divy Bhatt
+  email = your.personal@email.com
 
 [github]
-    user = TGDivy
-
-# Optional: sign commits with SSH key
-# [gpg]
-#     format = ssh
-# [gpg "ssh"]
-#     allowedSignersFile = ~/.ssh/allowed_signers
-# [commit]
-#     gpgsign = true
+  user = TGDivy

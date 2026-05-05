@@ -1,102 +1,5 @@
--- ── plugins/navigation.lua ───────────────────────────────────────────────────
 return {
-
-  -- ── telescope ──────────────────────────────────────────────────────────────
-  {
-    "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      local telescope = require("telescope")
-      local actions   = require("telescope.actions")
-
-      telescope.setup({
-        defaults = {
-          prompt_prefix   = " ",
-          selection_caret = " ",
-          path_display    = { "truncate" },
-          sorting_strategy = "ascending",
-          layout_config = {
-            horizontal = { prompt_position = "top", preview_width = 0.55 },
-          },
-          mappings = {
-            i = {
-              ["<C-k>"] = actions.move_selection_previous,
-              ["<C-j>"] = actions.move_selection_next,
-              ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
-              ["<Esc>"] = actions.close,
-            },
-          },
-          file_ignore_patterns = {
-            "%.git/", "node_modules/", "%.cache/", "build/", "%.o$", "%.a$",
-          },
-        },
-        pickers = {
-          find_files = { hidden = true },
-        },
-      })
-
-      telescope.load_extension("fzf")
-    end,
-  },
-
-  -- ── harpoon 2 — global file marks across projects ─────────────────────────
-  {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-    config = function()
-      local harpoon = require("harpoon")
-      harpoon:setup({
-        settings = {
-          save_on_toggle = true,
-          sync_on_ui_close = true,
-          -- Store marks in data dir keyed by project root (git root or cwd)
-          key = function()
-            return vim.loop.cwd()
-          end,
-        },
-      })
-
-      local map = function(lhs, rhs, desc)
-        vim.keymap.set("n", lhs, rhs, { noremap = true, silent = true, desc = desc })
-      end
-
-      -- Add / menu
-      map("<leader>ha", function() harpoon:list():add() end,    "Harpoon add")
-      map("<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Harpoon menu")
-
-      -- Jump to mark 1-5
-      for i = 1, 5 do
-        map("<leader>" .. i, function() harpoon:list():select(i) end, "Harpoon → " .. i)
-      end
-
-      -- Navigate prev/next
-      map("<leader>hn", function() harpoon:list():next() end, "Harpoon next")
-      map("<leader>hp", function() harpoon:list():prev() end, "Harpoon prev")
-
-      -- Telescope integration — fuzzy across all marks
-      map("<leader>hf", function()
-        local conf = require("telescope.config").values
-        local mark_list = {}
-        for _, item in ipairs(harpoon:list().items) do
-          table.insert(mark_list, item.value)
-        end
-        require("telescope.pickers").new({}, {
-          prompt_title  = "Harpoon",
-          finder = require("telescope.finders").new_table({ results = mark_list }),
-          previewer = conf.file_previewer({}),
-          sorter    = conf.generic_sorter({}),
-        }):find()
-      end, "Harpoon fuzzy")
-    end,
-  },
-
-  -- ── oil — file explorer as editable buffer ─────────────────────────────────
+  -- ── Oil: file browser (edit filesystem like a buffer) ─────────────────────
   {
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -108,160 +11,96 @@ return {
         "size",
         "mtime",
       },
-      keymaps = {
-        ["<CR>"]   = "actions.select",
-        ["<C-v>"]  = "actions.select_vsplit",
-        ["<C-s>"]  = "actions.select_split",
-        ["-"]      = "actions.parent",
-        ["_"]      = "actions.open_cwd",
-        ["`"]      = "actions.cd",
-        ["gs"]     = "actions.change_sort",
-        ["gx"]     = "actions.open_external",
-        ["g."]     = "actions.toggle_hidden",
-        ["?"]      = "actions.show_help",
-        ["q"]      = "actions.close",
-      },
       view_options = {
         show_hidden = true,
-      },
-      float = {
-        padding = 2,
-        max_width  = 100,
-        max_height = 40,
-      },
-    },
-  },
-
-  -- ── diffview — code review UI ──────────────────────────────────────────────
-  {
-    "sindrets/diffview.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      enhanced_diff_hl = true,
-      view = {
-        default = {
-          layout = "diff2_horizontal",
-          winbar_info = true,
-        },
-        merge_tool = {
-          layout = "diff3_horizontal",
-          disable_diagnostics = true,
-        },
-      },
-      file_panel = {
-        listing_style = "tree",
-        win_config = { width = 35 },
-      },
-      hooks = {
-        diff_buf_read = function(bufnr)
-          -- No wrap, no spell in diff buffers
-          vim.opt_local.wrap  = false
-          vim.opt_local.spell = false
+        is_hidden_file = function(name, _)
+          return name:match("^%.") ~= nil
         end,
+        natural_order = true,
       },
+      keymaps = {
+        ["g?"]    = "actions.show_help",
+        ["<CR>"]  = "actions.select",
+        ["<C-v>"] = "actions.select_vsplit",
+        ["<C-s>"] = "actions.select_split",
+        ["<C-t>"] = "actions.select_tab",
+        ["<C-p>"] = "actions.preview",
+        ["<C-c>"] = "actions.close",
+        ["-"]     = "actions.parent",
+        ["_"]     = "actions.open_cwd",
+        ["`"]     = "actions.cd",
+        ["~"]     = "actions.tcd",
+        ["gs"]    = "actions.change_sort",
+        ["gx"]    = "actions.open_external",
+        ["g."]    = "actions.toggle_hidden",
+        ["g\\"]   = "actions.toggle_trash",
+      },
+      use_default_keymaps = false,
+    },
+    keys = {
+      { "-",          "<cmd>Oil<cr>",              desc = "Oil: open parent dir" },
+      { "<leader>e",  "<cmd>Oil .<cr>",            desc = "Oil: open cwd" },
+      { "<leader>E",  function()
+          require("oil").open(vim.fn.expand("%:p:h"))
+        end, desc = "Oil: open file's dir" },
     },
   },
 
-  -- ── gitsigns — inline git info ─────────────────────────────────────────────
-  {
-    "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      signs = {
-        add          = { text = "│" },
-        change       = { text = "│" },
-        delete       = { text = "" },
-        topdelete    = { text = "‾" },
-        changedelete = { text = "~" },
-        untracked    = { text = "┆" },
-      },
-      current_line_blame = false,  -- toggle with <leader>gB
-      current_line_blame_opts = {
-        delay = 500,
-        virt_text_pos = "eol",
-      },
-    },
-  },
-
-  -- ── render-markdown — markdown renders inline ──────────────────────────────
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-    ft = { "markdown", "md" },
-    opts = {
-      enabled = true,
-      heading = {
-        enabled = true,
-        sign    = true,
-        icons   = { "󰉫 ", "󰉬 ", "󰉭 ", "󰉮 ", "󰉯 ", "󰉰 " },
-      },
-      code = {
-        enabled   = true,
-        style     = "full",
-        left_pad  = 1,
-        right_pad = 1,
-        border    = "thin",
-      },
-      bullet = { enabled = true },
-      checkbox = {
-        enabled  = true,
-        unchecked = { icon = "󰄱" },
-        checked   = { icon = "󰱒" },
-      },
-      table = { enabled = true },
-      link  = { enabled = true },
-    },
-  },
-
-  -- ── trouble — diagnostics panel ────────────────────────────────────────────
+  -- ── Trouble: diagnostics / LSP list panel ──────────────────────────────────
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       modes = {
-        diagnostics = {
-          auto_open   = false,
-          auto_close  = true,
-          auto_preview = true,
-        },
+        diagnostics = { auto_close = true, auto_preview = true },
+      },
+    },
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Trouble: workspace diagnostics" },
+      { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Trouble: buffer diagnostics" },
+      { "<leader>xs", "<cmd>Trouble symbols toggle<cr>",                  desc = "Trouble: symbols" },
+      { "<leader>xr", "<cmd>Trouble lsp toggle<cr>",                      desc = "Trouble: LSP references" },
+      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>",                   desc = "Trouble: quickfix" },
+      { "[t",         function() require("trouble").prev({ skip_groups = true, jump = true }) end, desc = "Trouble: prev" },
+      { "]t",         function() require("trouble").next({ skip_groups = true, jump = true }) end, desc = "Trouble: next" },
+    },
+  },
+
+  -- ── Mini.pairs: auto-pairs ─────────────────────────────────────────────────
+  {
+    "echasnovski/mini.pairs",
+    event = "InsertEnter",
+    opts  = {},
+  },
+
+  -- ── Mini.surround ─────────────────────────────────────────────────────────
+  {
+    "echasnovski/mini.surround",
+    keys = { "sa", "sd", "sr", "sf", "sF", "sh", "sn" },
+    opts = {
+      mappings = {
+        add            = "sa",
+        delete         = "sd",
+        replace        = "sr",
+        find           = "sf",
+        find_left      = "sF",
+        highlight      = "sh",
+        update_n_lines = "sn",
       },
     },
   },
 
-  -- ── treesitter — syntax + folding ─────────────────────────────────────────
+  -- ── Todo-comments ─────────────────────────────────────────────────────────
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
+    "folke/todo-comments.nvim",
+    event = "BufReadPost",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+    keys = {
+      { "]T",          function() require("todo-comments").jump_next() end, desc = "Next TODO" },
+      { "[T",          function() require("todo-comments").jump_prev() end, desc = "Prev TODO" },
+      { "<leader>ft",  "<cmd>TodoTelescope<cr>",                            desc = "TODOs (telescope)" },
+      { "<leader>xT",  "<cmd>Trouble todo toggle<cr>",                      desc = "TODOs (trouble)" },
     },
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "c", "cpp", "python", "lua", "vim", "vimdoc",
-          "bash", "fish", "markdown", "markdown_inline",
-          "json", "yaml", "toml", "cmake", "regex",
-        },
-        auto_install = true,
-        highlight    = { enable = true },
-        indent       = { enable = true },
-        textobjects  = {
-          select = {
-            enable = true,
-            keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-            },
-          },
-          move = {
-            enable = true,
-            goto_next_start     = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-            goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-          },
-        },
-      })
-    end,
   },
 }

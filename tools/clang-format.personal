@@ -1,28 +1,13 @@
----
-# clang-format.personal — Google-derived style, C++23
-BasedOnStyle: Google
-Standard: c++23
-
-ColumnLimit: 100
+# Personal: LLVM style with some tweaks
+BasedOnStyle: LLVM
 IndentWidth: 4
-ContinuationIndentWidth: 4
-AccessModifierOffset: -4
-
-# Braces
-BreakBeforeBraces: Attach
-
-# Includes
-IncludeBlocks: Regroup
-SortIncludes: CaseSensitive
-
-# Alignment
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignOperands: true
-
-# Misc
-AllowShortFunctionsOnASingleLine: Inline
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
+AlignTrailingComments: true
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
 SpaceBeforeParens: ControlStatements
 PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false

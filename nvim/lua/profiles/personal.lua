@@ -1,10 +1,11 @@
--- ── profiles/personal.lua ────────────────────────────────────────────────────
--- Home MacBook overrides — standard open-source toolchain
+-- Personal profile overrides
+-- Standard tooling — nothing special needed
 
--- Nothing special to override for personal. Defaults in lsp.lua apply:
---   clang-format: uses ~/.clang-format → tools/clang-format.personal
---   uv: standard pypi.org
---   cmake: cmake
-
-vim.notify("dotfiles: personal profile loaded", vim.log.levels.INFO,
-  { title = "dotfiles", timeout = 1000 })
+-- 2-space indent for Lua files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "lua", "json", "yaml", "markdown" },
+  callback = function()
+    vim.opt_local.tabstop    = 2
+    vim.opt_local.shiftwidth = 2
+  end,
+})

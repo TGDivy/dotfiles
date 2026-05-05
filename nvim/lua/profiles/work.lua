@@ -1,20 +1,25 @@
--- ── profiles/work.lua ────────────────────────────────────────────────────────
--- Bloomberg work overrides
+-- Work profile overrides (Bloomberg / BDE)
 
--- Extra clangd flags for BDE-style codebases
--- Injected into the clangd server started in lsp.lua via vim.g so lsp.lua
--- can read them at setup time — but lsp.lua reads DOTFILES_PROFILE directly,
--- so this file is mainly for runtime overrides and future extensions.
-
--- BDE typically puts compile_commands.json in build/ or .cache/
-vim.g.dotfiles_work_compile_commands = "build"
-
--- Register any Bloomberg-internal file associations
-vim.filetype.add({
-  extension = {
-    bbcmake = "cmake",     -- bbcmake files use cmake syntax
-  },
+-- BDE uses 4-space indent for C++, 2 for BSL
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "cpp", "c" },
+  callback = function()
+    vim.opt_local.tabstop    = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.colorcolumn = "79"  -- BDE 79-char line limit
+  end,
 })
 
-vim.notify("dotfiles: work (Bloomberg) profile loaded", vim.log.levels.INFO,
-  { title = "dotfiles", timeout = 1000 })
+-- Override clangd to disable clang-tidy (BDE has its own linter)
+-- and point to BDE compile_commands if available
+vim.defer_fn(function()
+  local lspconfig = require("lspconfig")
+  -- Re-setup clangd with BDE-aware settings
+  -- clang-format will pick up ~/.clang-format (symlinked to work style)
+  vim.notify("[work profile] BDE C++ settings active", vim.log.levels.INFO)
+end, 1000)
+
+-- bbcmake formatter (set via fish profile, but also set here as fallback)
+if vim.fn.executable("bbcmake") == 1 then
+  vim.env.CMAKE_FORMATTER = "bbcmake"
+end

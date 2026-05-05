@@ -158,3 +158,16 @@ set_fish_shell
 info "Done! Run: exec fish"
 info "nvim: plugins auto-install on first launch"
 info "tmux: press prefix+I on first launch"
+
+# ── Git profile active symlink ────────────────────────────────────────────────
+setup_git_profile() {
+  local src="$DOTFILES/git/profiles/$PROFILE.gitconfig"
+  local dst="$DOTFILES/git/profiles/active.gitconfig"
+  if [[ -f "$src" ]]; then
+    ln -sfn "$src" "$dst"
+    info "Git profile → $PROFILE"
+  else
+    warn "Git profile not found: $src"
+  fi
+}
+setup_git_profile
