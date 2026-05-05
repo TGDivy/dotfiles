@@ -15,7 +15,7 @@ return {
         "clangd",          -- C/C++
         "basedpyright",    -- Python (strict mode pyright fork)
         "ruff",            -- Python linting/formatting as LSP
-        "cmake",           -- CMakeLists.txt
+        "neocmake",        -- CMakeLists.txt (Rust-based, no Python dep)
         "lua_ls",          -- Lua (nvim config)
         "marksman",        -- Markdown
         "jsonls",          -- JSON
@@ -104,8 +104,8 @@ return {
         end,
       })
 
-      -- ── cmake ───────────────────────────────────────────────────────────────
-      lspconfig.cmake.setup({ capabilities = capabilities, on_attach = on_attach })
+      -- ── neocmake ────────────────────────────────────────────────────────────
+      lspconfig.neocmake.setup({ capabilities = capabilities, on_attach = on_attach })
 
       -- ── marksman (markdown) ─────────────────────────────────────────────────
       lspconfig.marksman.setup({ capabilities = capabilities, on_attach = on_attach })

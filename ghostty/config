@@ -1,7 +1,8 @@
 # ── Ghostty config ────────────────────────────────────────────────────────────
 # macOS only — RHEL8 uses SSH from here
 
-theme = catppuccin-mocha
+theme = kanagawa_dragon
+
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 font-feature = calt
@@ -31,6 +32,12 @@ clipboard-trim-trailing-spaces = true
 
 # Scrollback
 scrollback-limit = 10000
+
+# Shader — cursor smear trail
+# Draws a brief parallelogram trail between cursor positions when it jumps.
+# Tweak OPACITY and DURATION inside the .glsl file to taste.
+custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
+custom-shader-animation = true
 
 # Key bindings
 keybind = cmd+shift+enter=new_window

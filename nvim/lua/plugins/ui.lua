@@ -1,27 +1,47 @@
 return {
   -- ── Theme ──────────────────────────────────────────────────────────────────
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "rebelot/kanagawa.nvim",
     priority = 1000,
     opts = {
-      flavour = "mocha",
-      transparent_background = false,
-      integrations = {
-        telescope     = { enabled = true, style = "nvchad" },
-        harpoon       = true,
-        gitsigns      = true,
-        treesitter    = true,
-        render_markdown = true,
-        mini          = { enabled = true },
-        which_key     = true,
-        lsp_trouble   = true,
-      },
+      theme = "dragon",   -- dragon | wave | lotus
+      background = { dark = "dragon", light = "lotus" },
+      transparent = false,
+      colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
+      overrides = function(colors)
+        local theme = colors.theme
+        return {
+          -- Cleaner telescope borders
+          TelescopeTitle        = { fg = theme.ui.special, bold = true },
+          TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+          TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+          TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+          TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+          TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+          TelescopePreviewBorder = { fg = theme.ui.bg_dim, bg = theme.ui.bg_dim },
+        }
+      end,
     },
     config = function(_, opts)
-      require("catppuccin").setup(opts)
-      vim.cmd.colorscheme("catppuccin")
+      require("kanagawa").setup(opts)
+      vim.cmd.colorscheme("kanagawa-dragon")
     end,
+  },
+
+  -- ── Cursor smear (needed for Synesthaxia shader color inheritance) ─────────
+  -- Source: https://github.com/sphamba/smear-cursor.nvim
+  {
+    "sphamba/smear-cursor.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- Disable smear-cursor's own animations — we use the Ghostty shader instead.
+      -- We only need this plugin so the terminal cursor inherits syntax color.
+      smear_between_buffers     = false,
+      smear_between_neighbor_lines = false,
+      scroll_buffer_space       = false,
+      legacy_computing_symbols_support = false,
+      cursor_color              = "none",  -- inherit from syntax highlight under cursor
+    },
   },
 
   -- ── Status line ────────────────────────────────────────────────────────────
@@ -30,7 +50,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "catppuccin",
+        theme = "kanagawa-dragon",
         globalstatus = true,
         section_separators   = { left = "", right = "" },
         component_separators = { left = "", right = "" },
