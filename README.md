@@ -78,35 +78,40 @@ dotfiles/
 ### Harpoon (multi-project file marks)
 | Key           | Action                        |
 |---------------|-------------------------------|
-| `<leader>ha`  | Add file to harpoon           |
-| `<leader>hh`  | Harpoon menu                  |
-| `<leader>1-5` | Jump to mark 1–5              |
-| `<leader>hn`  | Next mark                     |
-| `<leader>hp`  | Prev mark                     |
-| `<leader>hf`  | Fuzzy search marks            |
+| `<leader>a`   | Add file to harpoon           |
+| `<leader>h`   | Harpoon menu                  |
+| `<C-1>–<C-4>` | Jump to mark 1–4              |
+| `<C-S-p>`     | Prev mark                     |
+| `<C-S-n>`     | Next mark                     |
+| `<leader>fh`  | Fuzzy search marks (Telescope)|
 
 ### Git / Code Review
 | Key           | Action                        |
 |---------------|-------------------------------|
 | `<leader>gd`  | Diffview (full repo diff)     |
+| `<leader>gD`  | Close diffview                |
 | `<leader>gh`  | File git history              |
 | `<leader>gH`  | Repo git history              |
-| `<leader>gc`  | Close diffview                |
-| `<leader>gs`  | Git status (Telescope)        |
-| `<leader>gb`  | Blame current line            |
-| `<leader>gB`  | Toggle inline blame           |
-| `<leader>gg`  | LazyGit TUI                   |
-| `]c` / `[c`   | Next/prev hunk                |
+| `<leader>gl`  | LazyGit TUI                   |
+| `<leader>hs`  | Stage hunk                    |
+| `<leader>hr`  | Reset hunk                    |
+| `<leader>hb`  | Blame line (full)             |
+| `<leader>tb`  | Toggle inline blame           |
+| `]h` / `[h`   | Next/prev hunk                |
 
 ### LSP
 | Key           | Action                        |
 |---------------|-------------------------------|
 | `gd`          | Go to definition              |
+| `gD`          | Go to declaration             |
 | `gr`          | References                    |
+| `gi`          | Go to implementation          |
 | `K`           | Hover docs                    |
+| `<C-s>`       | Signature help                |
 | `<leader>la`  | Code action                   |
 | `<leader>lr`  | Rename symbol                 |
 | `<leader>lf`  | Format buffer                 |
+| `<leader>li`  | LSP info                      |
 
 ### Diagnostics
 | Key           | Action                        |
@@ -120,17 +125,16 @@ dotfiles/
 
 ## tmux
 
-Prefix: **`Ctrl+a`**
+Prefix: **`Ctrl+Space`**
 
-| Key               | Action                       |
-|-------------------|------------------------------|
-| `prefix + \|`     | Vertical split               |
-| `prefix + -`      | Horizontal split             |
-| `prefix + h/j/k/l`| Navigate panes              |
-| `prefix + o`      | Sessionx session picker      |
-| `M-s`             | Choose session (no prefix)   |
-| `M-1..5`          | Jump to window (no prefix)   |
-| `prefix + r`      | Reload config                |
+| Key                | Action                       |
+|--------------------|------------------------------|
+| `prefix + \|`      | Vertical split               |
+| `prefix + -`       | Horizontal split             |
+| `prefix + h/j/k/l` | Navigate panes               |
+| `prefix + o`       | Sessionx session picker      |
+| `prefix + r`       | Reload config                |
+| `prefix + Enter`   | Enter copy mode (vi keys)    |
 
 Sessions auto-save every 10 min and restore on next launch (tmux-continuum).
 
@@ -168,7 +172,7 @@ unzip JetBrainsMono.zip && fc-cache -fv
 - [ ] Fill in `git/profiles/personal.gitconfig` (name + email)
 - [ ] Fill in `git/profiles/work.gitconfig` (Bloomberg email)
 - [ ] Set Bloomberg PyPI URL in `fish/profiles/work.fish`
-- [ ] Install JetBrainsMono Nerd Font
-- [ ] In tmux: `prefix + I` to install TPM plugins
+- [ ] Install JetBrainsMono Nerd Font (handled by `make personal` on macOS)
+- [ ] In tmux: `Ctrl+Space + I` to install TPM plugins on first launch
 - [ ] Open `nvim` — Lazy auto-installs plugins on first launch
 - [ ] `:Mason` in nvim to verify LSP servers installed

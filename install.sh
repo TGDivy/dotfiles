@@ -120,8 +120,6 @@ set_fish_shell() {
 write_brewfile() {
   [[ "$OS" != "macos" ]] && return
   cat > "$DOTFILES/Brewfile" << 'BREW'
-tap "homebrew/bundle"
-
 brew "fish"
 brew "starship"
 brew "tmux"
