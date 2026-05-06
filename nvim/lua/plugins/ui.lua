@@ -108,6 +108,10 @@ return {
     opts = {
       indent = { char = "│" },
       scope  = { enabled = true },
+      exclude = {
+        filetypes = { "dashboard", "alpha", "help", "lazy", "mason", "notify", "toggleterm" },
+        buftypes  = { "terminal", "nofile", "quickfix", "prompt" },
+      },
     },
   },
 
