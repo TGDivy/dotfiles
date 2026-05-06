@@ -27,6 +27,22 @@ elif [[ -f /etc/os-release ]]; then
 fi
 info "OS: $OS | Profile: $PROFILE | Remote: $REMOTE"
 
+install_tpm() {
+  mkdir -p "$HOME/.tmux/plugins"
+
+  if [[ -d "$HOME/.tmux/plugins/tpm/.git" ]]; then
+    info "TPM already installed"
+    return
+  fi
+
+  if [[ -e "$HOME/.tmux/plugins/tpm" ]]; then
+    warn "Removing invalid TPM path"
+    rm -rf "$HOME/.tmux/plugins/tpm"
+  fi
+
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+}
+
 install_packages() {
   if [[ $LINK_ONLY -eq 1 ]]; then return; fi
 
@@ -37,8 +53,7 @@ install_packages() {
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
       brew bundle --file="$DOTFILES/Brewfile"
-      [[ ! -d ~/.tmux/plugins/tpm ]] && \
-        git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      install_tpm
       ;;
     debian)
       sudo apt-get update -qq
@@ -49,8 +64,7 @@ install_packages() {
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
-      [[ ! -d ~/.tmux/plugins/tpm ]] && \
-        git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      install_tpm
       ;;
     rhel)
       sudo dnf install -y epel-release 2>/dev/null || true
@@ -67,8 +81,7 @@ install_packages() {
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
-      [[ ! -d ~/.tmux/plugins/tpm ]] && \
-        git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      install_tpm
       ;;
     *)
       warn "Unknown OS — skipping package install."
@@ -149,16 +162,6 @@ BREW
   info "Brewfile written"
 }
 
-write_brewfile
-install_packages
-link_configs
-write_profile_marker
-set_fish_shell
-
-info "Done! Run: exec fish"
-info "nvim: plugins auto-install on first launch"
-info "tmux: press prefix+I on first launch"
-
 # ── Git profile active symlink ────────────────────────────────────────────────
 setup_git_profile() {
   local src="$DOTFILES/git/profiles/$PROFILE.gitconfig"
@@ -170,4 +173,15 @@ setup_git_profile() {
     warn "Git profile not found: $src"
   fi
 }
+
+write_brewfile
+install_packages
+link_configs
+write_profile_marker
+set_fish_shell
 setup_git_profile
+
+info "Done! Run: exec fish"
+info "nvim: plugins auto-install on first launch"
+info "tmux: press prefix+I on first launch"
+

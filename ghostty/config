@@ -15,26 +15,16 @@ window-decoration = true
 macos-titlebar-style = hidden
 
 # Cursor
-cursor-style = bar
+cursor-style = block
 cursor-style-blink = true
-cursor-opacity = 1.0
-
-# Shell
-shell-integration = detect
-shell-integration-features = cursor,sudo,title
+shell-integration-features = no-cursor,ssh-env
 
 # Copy/paste
 copy-on-select = clipboard
 clipboard-trim-trailing-spaces = true
 
-# Scrollback
-scrollback-limit = 10000
-
 # Shader — cursor smear trail
-# Draws a brief parallelogram trail between cursor positions when it jumps.
-# Tweak OPACITY and DURATION inside the .glsl file to taste.
 custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
-custom-shader-animation = true
 
 # Key bindings
 keybind = cmd+shift+enter=new_window
@@ -46,4 +36,4 @@ keybind = cmd+shift+]=next_tab
 keybind = cmd+k=clear_screen
 
 # macOS: use Option as Meta (for nvim alt-keys)
-macos-option-as-alt = true
+# macos-option-as-alt = true
