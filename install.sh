@@ -15,6 +15,10 @@ info()    { echo -e "${GREEN}[dotfiles]${NC} $*"; }
 warn()    { echo -e "${YELLOW}[dotfiles]${NC} $*"; }
 err()     { echo -e "${RED}[dotfiles]${NC} $*"; exit 1; }
 
+# On Spaces (and other root environments) sudo doesn't exist — drop it
+SUDO="sudo"
+if [[ "$(id -u)" -eq 0 ]]; then SUDO=""; fi
+
 OS="unknown"
 if [[ "$(uname)" == "Darwin" ]]; then
   OS="macos"
@@ -56,8 +60,8 @@ install_packages() {
       install_tpm
       ;;
     debian)
-      sudo apt-get update -qq
-      sudo apt-get install -y \
+      $SUDO apt-get update -qq
+      $SUDO apt-get install -y \
         fish tmux git curl wget unzip ripgrep fd-find fzf \
         neovim clang clang-format clangd cmake \
         python3 python3-pip build-essential
@@ -67,15 +71,15 @@ install_packages() {
       install_tpm
       ;;
     rhel)
-      sudo dnf install -y epel-release 2>/dev/null || true
-      sudo dnf install -y \
+      $SUDO dnf install -y epel-release 2>/dev/null || true
+      $SUDO dnf install -y \
         fish tmux git curl wget unzip ripgrep fzf \
         clang clang-tools-extra cmake \
         python3 python3-pip gcc gcc-c++ make
       if ! nvim --version 2>/dev/null | grep -qE "NVIM v0\.[89]|NVIM v[1-9]"; then
         warn "RHEL nvim too old — installing AppImage..."
         curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-        sudo tar -C /usr/local -xzf nvim-linux-x86_64.tar.gz --strip-components=1
+        $SUDO tar -C /usr/local -xzf nvim-linux-x86_64.tar.gz --strip-components=1
         rm nvim-linux-x86_64.tar.gz
       fi
       pip3 install --user cmake-format
@@ -125,7 +129,7 @@ set_fish_shell() {
   local fish_path
   fish_path=$(command -v fish 2>/dev/null) || { warn "fish not found"; return; }
   if ! grep -qF "$fish_path" /etc/shells 2>/dev/null; then
-    echo "$fish_path" | sudo tee -a /etc/shells
+    echo "$fish_path" | $SUDO tee -a /etc/shells
   fi
   if [[ "$SHELL" != "$fish_path" ]]; then
     chsh -s "$fish_path" && info "Default shell → fish"
