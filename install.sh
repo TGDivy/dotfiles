@@ -184,14 +184,36 @@ setup_git_profile() {
   fi
 }
 
+bootstrap_nvim() {
+  if [[ $LINK_ONLY -eq 1 ]]; then return; fi
+  if ! command -v nvim &>/dev/null; then warn "nvim not found — skipping plugin bootstrap"; return; fi
+
+  info "Bootstrapping Neovim plugins headlessly (this takes ~1 min)..."
+  # Run Lazy sync in headless mode so plugins are ready on first launch.
+  # On bloomberg-* profiles this inherits the proxy env from the make invocation.
+  if nvim --headless "+Lazy! sync" +qa 2>&1 | grep -v "^$"; then
+    info "Neovim plugins installed"
+  else
+    warn "Lazy sync had errors — open nvim and run :Lazy sync manually"
+  fi
+}
+
 write_brewfile
 install_packages
 link_configs
 write_profile_marker
 set_fish_shell
 setup_git_profile
+bootstrap_nvim
 
 info "Done! Run: exec fish"
-info "nvim: plugins auto-install on first launch"
-info "tmux: press prefix+I on first launch"
+info "tmux: press prefix+I on first launch to install plugins"
+
+if [[ "$PROFILE" == bloomberg-* ]]; then
+  info ""
+  info "Bloomberg Mac note: if any tool needs external internet (brew, nvim, curl),"
+  info "prefix the command with the proxy:"
+  info "  http_proxy=http://proxy.bloomberg.com:81 https_proxy=http://proxy.bloomberg.com:81 <cmd>"
+  info "Or use the 'ext_proxy' fish abbr once fish is your shell."
+fi
 
