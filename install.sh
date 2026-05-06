@@ -76,12 +76,35 @@ install_packages() {
         fish tmux git curl wget unzip ripgrep fzf \
         clang clang-tools-extra cmake \
         python3 python3-pip gcc gcc-c++ make
-      if ! nvim --version 2>/dev/null | grep -qE "NVIM v0\.[89]|NVIM v[1-9]"; then
-        warn "RHEL nvim too old — installing AppImage..."
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-        $SUDO tar -C /usr/local -xzf nvim-linux-x86_64.tar.gz --strip-components=1
-        rm nvim-linux-x86_64.tar.gz
+
+      # Bloomberg Spaces: use internal apt for bloomberg-packaged tools.
+      # /opt/bb/bin/apt-get has modern versions (nvim 0.12.x, etc.) built for
+      # this environment — avoids glibc incompatibilities with GitHub releases.
+      if command -v /opt/bb/bin/apt-get &>/dev/null; then
+        info "Bloomberg apt detected — installing bloomberg-packaged tools..."
+        /opt/bb/bin/apt-get install -y neovim bat git-delta lazygit 2>/dev/null || \
+          /opt/bb/bin/apt-get install -y neovim 2>/dev/null || true
+      elif ! nvim --version 2>/dev/null | grep -qE "NVIM v0\.[89]|NVIM v[1-9]"; then
+        warn "nvim too old — installing from GitHub..."
+        local nvim_tmp; nvim_tmp=$(mktemp -d)
+        curl -L "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" \
+          -o "$nvim_tmp/nvim.tar.gz"
+        $SUDO tar -C /usr/local -xzf "$nvim_tmp/nvim.tar.gz" --strip-components=1
+        rm -rf "$nvim_tmp"
       fi
+      info "nvim: $(nvim --version 2>/dev/null | head -1)"
+
+      # lazygit — install from GitHub if Bloomberg apt didn't provide it
+      if ! command -v lazygit &>/dev/null; then
+        info "Installing lazygit from GitHub..."
+        local lg_tmp; lg_tmp=$(mktemp -d)
+        local lg_ver; lg_ver=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+        curl -sL "https://github.com/jesseduffield/lazygit/releases/download/v${lg_ver}/lazygit_${lg_ver}_Linux_x86_64.tar.gz" | \
+          tar -xzf - -C "$lg_tmp"
+        install -Dm755 "$lg_tmp/lazygit" "$HOME/.local/bin/lazygit"
+        rm -rf "$lg_tmp"
+      fi
+
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
@@ -132,7 +155,14 @@ set_fish_shell() {
     echo "$fish_path" | $SUDO tee -a /etc/shells
   fi
   if [[ "$SHELL" != "$fish_path" ]]; then
-    chsh -s "$fish_path" && info "Default shell → fish"
+    if command -v chsh &>/dev/null; then
+      chsh -s "$fish_path" && info "Default shell → fish"
+    else
+      # Spaces: no chsh. Exec fish from .bashrc so it launches automatically.
+      warn "chsh not available — adding 'exec fish' to ~/.bashrc"
+      grep -qxF "exec $fish_path" "$HOME/.bashrc" 2>/dev/null || \
+        echo "exec $fish_path" >> "$HOME/.bashrc"
+    fi
   fi
 }
 
