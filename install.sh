@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$HOME/.dotfiles"
-PROFILE="${DOTFILES_PROFILE:-personal}"
+PROFILE="${DOTFILES_PROFILE:-personal-mac}"
 REMOTE="${DOTFILES_REMOTE:-0}"
 LINK_ONLY=0
 
@@ -134,6 +134,8 @@ set_fish_shell() {
 
 write_brewfile() {
   [[ "$OS" != "macos" ]] && return
+
+  # Base packages — all profiles
   cat > "$DOTFILES/Brewfile" << 'BREW'
 brew "fish"
 brew "starship"
@@ -148,17 +150,25 @@ brew "zoxide"
 brew "git"
 brew "git-delta"
 brew "lazygit"
-brew "llvm"
-brew "cmake"
 brew "uv"
 brew "ruff"
 brew "jq"
 brew "htop"
 brew "wget"
-
 cask "ghostty"
 cask "font-jetbrains-mono-nerd-font"
 BREW
+
+  # Personal only: cmake + llvm
+  # Bloomberg machines use bbcmake and Bloomberg-provisioned clang — skip to
+  # avoid conflicts with any cmake-app cask already installed by IT.
+  if [[ "$PROFILE" == "personal-mac" ]]; then
+    cat >> "$DOTFILES/Brewfile" << 'BREW'
+brew "llvm"
+brew "cmake"
+BREW
+  fi
+
   info "Brewfile written"
 }
 

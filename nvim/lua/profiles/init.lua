@@ -1,5 +1,5 @@
 -- Load profile based on $DOTFILES_PROFILE env var
-local profile = os.getenv("DOTFILES_PROFILE") or "personal"
+local profile = os.getenv("DOTFILES_PROFILE") or "personal-mac"
 
 local ok, err = pcall(require, "profiles." .. profile)
 if not ok then

@@ -1,0 +1,18 @@
+[user]
+  name  = Divy B
+  email = dbramhecha@bloomberg.net
+
+[url "ssh://git@bbgithub.dev.bloomberg.com/"]
+  insteadOf = https://bbgithub.dev.bloomberg.com/
+
+# ── bbvpn: github.com access ──────────────────────────────────────────────────
+# bbvpn performs TLS inspection. Use macOS native SSL (reads System Keychain
+# where Bloomberg root CA is already trusted) to avoid cert errors.
+# SSH to github.com is blocked by the proxy — rewrite to HTTPS.
+[http "https://github.com"]
+  sslBackend = secure-transport
+
+[url "https://github.com/"]
+  insteadOf = git@github.com:
+[url "https://github.com/"]
+  insteadOf = ssh://git@github.com/

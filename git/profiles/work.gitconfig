@@ -1,6 +1,0 @@
-[user]
-  name  = Divy B
-  email = dbramhecha@bloomberg.net
-
-[url "ssh://git@bbgithub.dev.bloomberg.com/"]
-  insteadOf = https://bbgithub.dev.bloomberg.com/

@@ -1,5 +1,5 @@
-function use-profile --description "Switch dotfiles profile (personal|work) without reinstalling"
-    set -l valid_profiles personal work
+function use-profile --description "Switch dotfiles profile without reinstalling"
+    set -l valid_profiles personal-mac bloomberg-mac bloomberg-spaces
     set -l profile $argv[1]
 
     if test -z "$profile"
