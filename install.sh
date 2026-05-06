@@ -188,10 +188,11 @@ bootstrap_nvim() {
   if [[ $LINK_ONLY -eq 1 ]]; then return; fi
   if ! command -v nvim &>/dev/null; then warn "nvim not found — skipping plugin bootstrap"; return; fi
 
-  info "Bootstrapping Neovim plugins headlessly (this takes ~1 min)..."
+  info "Bootstrapping Neovim plugins headlessly (this takes ~2 min)..."
   # Run Lazy sync in headless mode so plugins are ready on first launch.
   # On bloomberg-* profiles this inherits the proxy env from the make invocation.
-  if nvim --headless "+Lazy! sync" +qa 2>&1 | grep -v "^$"; then
+  # Use lua directly — "+Lazy! sync" +qa races against async plugin downloads.
+  if nvim --headless -c "lua require('lazy').sync({wait=true, show=false})" -c "qall" 2>&1 | grep -v "^$"; then
     info "Neovim plugins installed"
   else
     warn "Lazy sync had errors — open nvim and run :Lazy sync manually"

@@ -11,6 +11,7 @@
 # SSH to github.com is blocked by the proxy — rewrite to HTTPS.
 [http "https://github.com"]
   sslBackend = secure-transport
+  proxy = http://proxy.bloomberg.com:81
 
 [url "https://github.com/"]
   insteadOf = git@github.com:
