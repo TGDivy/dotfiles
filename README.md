@@ -160,10 +160,42 @@ unzip JetBrainsMono.zip && fc-cache -fv
 ## Work Profile (Bloomberg)
 
 - `~/.clang-format` → `tools/clang-format.work` (BDE 79-col style)
-- Uncomment `UV_INDEX_URL` in `fish/profiles/work.fish` with Bloomberg PyPI URL
 - Fill in `git/profiles/work.gitconfig` with your Bloomberg email
 - `bde-format` binary: if present, conform.nvim uses it automatically for C++
-- Uncomment `CMAKE_COMMAND=bbcmake` in `fish/profiles/work.fish`
+- Bloomberg PyPI and bbcmake are auto-configured in `fish/profiles/work.fish`
+
+### bbvpn — CLI proxy setup
+
+bbvpn performs TLS inspection. `git` is pre-configured in `work.gitconfig` to
+use macOS's native SSL backend (which already trusts Bloomberg's root CA from
+the System Keychain). No cert file needed.
+
+For `brew`, `curl`, and other CLI tools, use the proxy aliases defined in
+`fish/profiles/work.fish`:
+
+```fish
+# Prefix any command that needs external internet access:
+ext_proxy brew install fish
+ext_proxy make work
+
+# For Bloomberg-internal services (bbgithub, dpkg, etc.):
+dev_proxy curl https://blp-dpkg.dev.bloomberg.com
+```
+
+Do **not** export proxy vars globally — they break tools when off VPN.
+
+### First-time install on Bloomberg Mac
+
+```bash
+git clone https://github.com/TGDivy/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+
+# Run install with external proxy for brew downloads:
+http_proxy=http://proxy.bloomberg.com:81 \
+https_proxy=http://proxy.bloomberg.com:81 \
+HOMEBREW_NO_AUTO_UPDATE=1 \
+make work
+```
 
 ---
 
