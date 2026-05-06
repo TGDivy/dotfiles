@@ -3,7 +3,7 @@ if test -f ~/.dotfiles_profile
     source ~/.dotfiles_profile
 end
 
-set -gx DOTFILES_PROFILE (test -n "$DOTFILES_PROFILE"; and echo $DOTFILES_PROFILE; or echo personal)
+set -gx DOTFILES_PROFILE (test -n "$DOTFILES_PROFILE"; and echo $DOTFILES_PROFILE; or echo personal-mac)
 
 # Source profile-specific config
 set -l profile_file ~/.dotfiles/fish/profiles/$DOTFILES_PROFILE.fish

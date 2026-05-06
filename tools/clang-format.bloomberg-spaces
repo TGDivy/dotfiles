@@ -1,0 +1,18 @@
+# Work: BDE (Bloomberg Development Environment) style
+# BDE enforces strict 79-char limit and specific formatting
+BasedOnStyle: WebKit
+IndentWidth: 4
+ColumnLimit: 79
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AlignTrailingComments: false
+SortIncludes: false
+BreakBeforeBraces: Allman
+SpaceBeforeParens: Always
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+AccessModifierOffset: -4
+# BDE requires specific namespace formatting
+NamespaceIndentation: None
+FixNamespaceComments: true

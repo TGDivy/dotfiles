@@ -1,0 +1,13 @@
+[user]
+  name  = Divy B
+  email = dbramhecha@bloomberg.net
+
+[url "ssh://git@bbgithub.dev.bloomberg.com/"]
+  insteadOf = https://bbgithub.dev.bloomberg.com/
+
+# Spaces: SSH to github.com may or may not work depending on network config.
+# Rewrite to HTTPS as a safe default.
+[url "https://github.com/"]
+  insteadOf = git@github.com:
+[url "https://github.com/"]
+  insteadOf = ssh://git@github.com/

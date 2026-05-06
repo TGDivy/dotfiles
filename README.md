@@ -11,9 +11,9 @@ Stack: **Ghostty · Fish · tmux · Neovim · Starship · Catppuccin Mocha**
 git clone https://github.com/TGDivy/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
-make personal      # Home MacBook
-make work          # Work MacBook (Bloomberg)
-make work-remote   # Remote RHEL8 (SSH target — no Ghostty)
+make personal-mac       # Home MacBook
+make bloomberg-mac      # Bloomberg MacBook
+make bloomberg-spaces   # Bloomberg Spaces / RHEL8 (no Ghostty)
 ```
 
 > Detects OS automatically: macOS → brew, Ubuntu → apt, RHEL → dnf.
@@ -22,12 +22,12 @@ make work-remote   # Remote RHEL8 (SSH target — no Ghostty)
 
 ## Machines
 
-| Machine       | Profile    | Command           |
-|---------------|------------|-------------------|
-| Home MacBook  | `personal` | `make personal`   |
-| Work MacBook  | `work`     | `make work`       |
-| RHEL8 remote  | `work`     | `make work-remote`|
-| Home Linux PC | `personal` | `make personal`   |
+| Machine             | Profile             | Command                 |
+|---------------------|---------------------|-------------------------|
+| Home MacBook        | `personal-mac`      | `make personal-mac`     |
+| Bloomberg MacBook   | `bloomberg-mac`     | `make bloomberg-mac`    |
+| Bloomberg Spaces    | `bloomberg-spaces`  | `make bloomberg-spaces` |
+| Home Linux PC       | `personal-mac`      | `make personal-mac`     |
 
 Profile written to `~/.dotfiles_profile`, read by Fish + Neovim on startup.
 
@@ -36,8 +36,9 @@ Profile written to `~/.dotfiles_profile`, read by Fish + Neovim on startup.
 ## Switch Profile (no reinstall)
 
 ```fish
-use-profile work      # fish function — switches and reloads instantly
-use-profile personal
+use-profile bloomberg-mac      # fish function — switches and reloads instantly
+use-profile personal-mac
+use-profile bloomberg-spaces
 ```
 
 ---
@@ -47,7 +48,7 @@ use-profile personal
 ```
 dotfiles/
 ├── install.sh           # bootstrap (detects OS, installs, symlinks)
-├── Makefile             # make personal | work | work-remote
+├── Makefile             # make personal-mac | work | work-remote
 ├── profiles/            # env vars per profile
 ├── fish/                # config.fish + per-profile overrides
 ├── tmux/tmux.conf       # catppuccin, sessionx, resurrect
@@ -176,7 +177,7 @@ For `brew`, `curl`, and other CLI tools, use the proxy aliases defined in
 ```fish
 # Prefix any command that needs external internet access:
 ext_proxy brew install fish
-ext_proxy make work
+ext_proxy make bloomberg-mac
 
 # For Bloomberg-internal services (bbgithub, dpkg, etc.):
 dev_proxy curl https://blp-dpkg.dev.bloomberg.com
@@ -194,7 +195,7 @@ cd ~/.dotfiles
 http_proxy=http://proxy.bloomberg.com:81 \
 https_proxy=http://proxy.bloomberg.com:81 \
 HOMEBREW_NO_AUTO_UPDATE=1 \
-make work
+make bloomberg-mac
 ```
 
 ---
@@ -203,8 +204,7 @@ make work
 
 - [ ] Fill in `git/profiles/personal.gitconfig` (name + email)
 - [ ] Fill in `git/profiles/work.gitconfig` (Bloomberg email)
-- [ ] Set Bloomberg PyPI URL in `fish/profiles/work.fish`
-- [ ] Install JetBrainsMono Nerd Font (handled by `make personal` on macOS)
+- [ ] Install JetBrainsMono Nerd Font (handled by `make personal-mac` on macOS; install manually on bloomberg-mac)
 - [ ] In tmux: `Ctrl+Space + I` to install TPM plugins on first launch
 - [ ] Open `nvim` — Lazy auto-installs plugins on first launch
 - [ ] `:Mason` in nvim to verify LSP servers installed

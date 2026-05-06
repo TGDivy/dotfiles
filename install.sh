@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$HOME/.dotfiles"
-PROFILE="${DOTFILES_PROFILE:-personal}"
+PROFILE="${DOTFILES_PROFILE:-personal-mac}"
 REMOTE="${DOTFILES_REMOTE:-0}"
 LINK_ONLY=0
 
@@ -160,9 +160,9 @@ cask "font-jetbrains-mono-nerd-font"
 BREW
 
   # Personal only: cmake + llvm
-  # Work machines use bbcmake and Bloomberg-provisioned clang — skip to avoid
-  # conflicts with any cmake-app cask already installed by IT.
-  if [[ "$PROFILE" == "personal" ]]; then
+  # Bloomberg machines use bbcmake and Bloomberg-provisioned clang — skip to
+  # avoid conflicts with any cmake-app cask already installed by IT.
+  if [[ "$PROFILE" == "personal-mac" ]]; then
     cat >> "$DOTFILES/Brewfile" << 'BREW'
 brew "llvm"
 brew "cmake"
