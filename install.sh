@@ -82,7 +82,8 @@ install_packages() {
       # this environment — avoids glibc incompatibilities with GitHub releases.
       if command -v /opt/bb/bin/apt-get &>/dev/null; then
         info "Bloomberg apt detected — installing bloomberg-packaged tools..."
-        /opt/bb/bin/apt-get install -y neovim bat git-delta lazygit 2>/dev/null || \
+        # neovim, bat, git-delta are bloomberg-packaged; lazygit is not
+        /opt/bb/bin/apt-get install -y neovim bat git-delta 2>/dev/null || \
           /opt/bb/bin/apt-get install -y neovim 2>/dev/null || true
       elif ! nvim --version 2>/dev/null | grep -qE "NVIM v0\.[89]|NVIM v[1-9]"; then
         warn "nvim too old — installing from GitHub..."
