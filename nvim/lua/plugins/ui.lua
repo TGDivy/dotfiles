@@ -50,7 +50,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "kanagawa-dragon",
+        theme = "kanagawa",
         globalstatus = true,
         section_separators   = { left = "", right = "" },
         component_separators = { left = "", right = "" },
@@ -108,6 +108,10 @@ return {
     opts = {
       indent = { char = "│" },
       scope  = { enabled = true },
+      exclude = {
+        filetypes = { "dashboard", "alpha", "help", "lazy", "mason", "notify", "toggleterm" },
+        buftypes  = { "terminal", "nofile", "quickfix", "prompt" },
+      },
     },
   },
 
