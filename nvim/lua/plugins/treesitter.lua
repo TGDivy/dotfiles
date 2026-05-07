@@ -14,6 +14,7 @@ return {
         "git_config", "gitcommit", "diff",
         "typescript", "javascript", "tsx",
         "xml",
+        "regex", "bash",  -- needed by noice.nvim cmdline highlighting
       },
       auto_install = true,
       highlight = {

@@ -111,6 +111,22 @@ install_packages() {
 
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      # Install ruff via uv (pip3 on RHEL 8 is too old for ruff)
+      if command -v uv &>/dev/null || [[ -x "$HOME/.local/bin/uv" ]]; then
+        "$HOME/.local/bin/uv" tool install ruff 2>/dev/null || true
+      fi
+
+      # fd (find replacement used by telescope) — try Bloomberg apt then dnf
+      if ! command -v fd &>/dev/null; then
+        /opt/bb/bin/apt-get install -y fd 2>/dev/null || \
+          $SUDO dnf install -y fd-find 2>/dev/null || true
+        # fd-find installs as 'fdfind' on some distros — symlink to 'fd'
+        if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
+          ln -sf "$(which fdfind)" "$HOME/.local/bin/fd"
+        fi
+      fi
+
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
       install_tpm
       ;;
