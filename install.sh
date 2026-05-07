@@ -112,9 +112,10 @@ install_packages() {
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
 
-      # Install ruff via uv (pip3 on RHEL 8 is too old for ruff)
+      # Install Python tools via uv (pip3 on RHEL 8 is Python 3.6 — too old)
       if command -v uv &>/dev/null || [[ -x "$HOME/.local/bin/uv" ]]; then
         "$HOME/.local/bin/uv" tool install ruff 2>/dev/null || true
+        "$HOME/.local/bin/uv" tool install basedpyright 2>/dev/null || true
       fi
 
       # fd (find replacement used by telescope) — try Bloomberg apt then dnf
