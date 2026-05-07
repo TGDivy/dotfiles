@@ -30,7 +30,9 @@ return
         "williamboman/mason-lspconfig.nvim",
         dependencies = {"williamboman/mason.nvim"},
         opts = {
-            ensure_installed = {"clangd", "basedpyright", "ruff", "neocmake", "lua_ls", "marksman", "jsonls", "yamlls", "ts_ls", "taplo"},
+            -- Note: ruff and basedpyright excluded — Mason can't install them on
+            -- RHEL 8 (Python 3.6 too old). Install via: uv tool install ruff basedpyright
+            ensure_installed = {"clangd", "neocmake", "lua_ls", "marksman", "jsonls", "yamlls", "ts_ls", "taplo"},
             automatic_installation = true
         }
     },
