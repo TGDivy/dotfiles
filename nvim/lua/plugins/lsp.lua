@@ -10,8 +10,19 @@ return
                     package_pending = "➜",
                     package_uninstalled = "✗"
                 }
-            }
+            },
+            -- Formatters/tools installed via mason (not LSPs)
+            ensure_installed = { "prettier", "stylua" },
         }
+    },
+    -- mason-tool-installer: handles non-LSP tools (formatters, linters)
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "williamboman/mason.nvim" },
+        opts = {
+            ensure_installed = { "prettier", "stylua" },
+            auto_update = false,
+        },
     },
 
     -- ── Mason-lspconfig bridge ─────────────────────────────────────────────────
@@ -19,7 +30,7 @@ return
         "williamboman/mason-lspconfig.nvim",
         dependencies = {"williamboman/mason.nvim"},
         opts = {
-            ensure_installed = {"clangd", "basedpyright", "ruff", "neocmake", "lua_ls", "marksman", "jsonls", "yamlls"},
+            ensure_installed = {"clangd", "basedpyright", "ruff", "neocmake", "lua_ls", "marksman", "jsonls", "yamlls", "ts_ls", "taplo"},
             automatic_installation = true
         }
     },
@@ -159,8 +170,21 @@ return
                 on_attach = on_attach
             })
 
+            -- ── ts_ls (TypeScript) ────────────────────────────────────────────────
+            vim.lsp.config("ts_ls", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+                filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+            })
+
+            -- ── taplo (TOML) ──────────────────────────────────────────────────────
+            vim.lsp.config("taplo", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
             -- ── Enable servers ────────────────────────────────────────────────────
-            vim.lsp.enable({"clangd", "basedpyright", "ruff", "neocmake", "marksman", "lua_ls", "jsonls", "yamlls"})
+            vim.lsp.enable({"clangd", "basedpyright", "ruff", "neocmake", "marksman", "lua_ls", "jsonls", "yamlls", "ts_ls", "taplo"})
 
             -- ── Diagnostics UI ────────────────────────────────────────────────────
             vim.diagnostic.config({

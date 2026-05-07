@@ -18,10 +18,20 @@ return {
         -- CMake: uses $CMAKE_FORMATTER env (cmake-format or bbcmake)
         cmake = { "cmake_format_wrapper" },
 
+        -- TypeScript / JavaScript
+        typescript      = { "prettier" },
+        typescriptreact = { "prettier" },
+        javascript      = { "prettier" },
+        javascriptreact = { "prettier" },
+
+        -- TOML
+        toml = { "taplo" },
+
         -- Web / config
         json     = { "prettier" },
         yaml     = { "prettier" },
         markdown = { "prettier" },
+        xml      = { "prettier" },
       },
 
       -- Format on save
