@@ -82,6 +82,9 @@ install_packages() {
       # this environment — avoids glibc incompatibilities with GitHub releases.
       if command -v /opt/bb/bin/apt-get &>/dev/null; then
         info "Bloomberg apt detected — installing bloomberg-packaged tools..."
+        # Remove any stale /usr/local/bin/nvim (e.g. from a failed AppImage attempt)
+        # so the Bloomberg apt version in /usr/bin takes precedence
+        rm -f /usr/local/bin/nvim
         # neovim, bat, git-delta are bloomberg-packaged; lazygit is not
         /opt/bb/bin/apt-get install -y neovim bat git-delta 2>/dev/null || \
           /opt/bb/bin/apt-get install -y neovim 2>/dev/null || true
