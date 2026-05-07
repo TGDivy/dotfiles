@@ -112,9 +112,15 @@ install_packages() {
       pip3 install --user cmake-format
       curl -LsSf https://astral.sh/uv/install.sh | sh
 
-      # Install ruff via uv (pip3 on RHEL 8 is too old for ruff)
-      if command -v uv &>/dev/null || [[ -x "$HOME/.local/bin/uv" ]]; then
-        "$HOME/.local/bin/uv" tool install ruff 2>/dev/null || true
+      # Install Python tools via uv (pip3 on RHEL 8 is Python 3.6 — too old).
+      # Use /opt/bb/bin/uv (Bloomberg's pre-configured uv) if available.
+      # --system-certs is needed because Bloomberg's proxy does TLS inspection
+      # and uv's bundled certs don't trust Bloomberg's CA.
+      local uv_cmd
+      uv_cmd=$(/opt/bb/bin/uv --version &>/dev/null && echo "/opt/bb/bin/uv" || echo "$HOME/.local/bin/uv")
+      if [[ -x "$uv_cmd" ]]; then
+        "$uv_cmd" tool install --system-certs ruff 2>/dev/null || true
+        "$uv_cmd" tool install --system-certs basedpyright 2>/dev/null || true
       fi
 
       # fd (find replacement used by telescope) — try Bloomberg apt then dnf
