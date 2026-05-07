@@ -81,6 +81,11 @@ return
                 map("<leader>li", "<cmd>LspInfo<cr>", "LSP info")
             end
 
+            -- ── clangd: switch header/source ──────────────────────────────────────
+            vim.keymap.set("n", "<leader>lh",
+              "<cmd>ClangdSwitchSourceHeader<cr>",
+              { desc = "LSP: switch header/source (C++)" })
+
             -- ── clangd ────────────────────────────────────────────────────────────
             vim.lsp.config("clangd", {
                 capabilities = capabilities,
