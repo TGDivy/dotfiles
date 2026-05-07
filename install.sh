@@ -178,10 +178,12 @@ set_fish_shell() {
     if command -v chsh &>/dev/null; then
       chsh -s "$fish_path" && info "Default shell → fish"
     else
-      # Spaces: no chsh. Exec fish from .bashrc so it launches automatically.
-      warn "chsh not available — adding 'exec fish' to ~/.bashrc"
-      grep -qxF "exec $fish_path" "$HOME/.bashrc" 2>/dev/null || \
-        echo "exec $fish_path" >> "$HOME/.bashrc"
+      # Spaces: no chsh. Exec fish only for interactive shells — NOT scripts
+      # or subshells (which breaks tools like Claude Code that spawn bash).
+      warn "chsh not available — adding interactive-only 'exec fish' to ~/.bashrc"
+      local fish_shim='[[ $- == *i* ]] && [[ -z "$FISH_VERSION" ]] && exec '"$fish_path"
+      grep -qF "exec $fish_path" "$HOME/.bashrc" 2>/dev/null || \
+        echo "$fish_shim" >> "$HOME/.bashrc"
     fi
   fi
 }
