@@ -43,16 +43,31 @@ o.timeoutlen  = 300
 o.completeopt = { "menuone", "noselect" }
 o.pumheight   = 10
 
--- Clipboard — OSC 52 works locally (Ghostty) and over SSH/tmux
--- Use pcall in case the module path differs across nvim versions
-local ok, osc52 = pcall(require, "vim.ui.clipboard.osc52")
-if ok then
-  vim.g.clipboard = {
-    name  = "OSC 52",
-    copy  = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
-    paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
-  }
+-- Clipboard — OSC 52 over SSH/tmux
+-- The built-in vim.ui.clipboard.osc52 uses io.write() which doesn't reliably
+-- reach the terminal when running inside tmux. Using chansend(v:stderr) instead
+-- writes directly to nvim's terminal fd — works in bare SSH and tmux.
+local function osc52_copy(reg)
+  return function(lines, _)
+    local data = table.concat(lines, "\n")
+    local encoded = vim.base64.encode(data)
+    local seq = string.format("\027]52;%s;%s\027\\", reg == "*" and "p" or "c", encoded)
+    -- DCS passthrough for tmux
+    if vim.env.TMUX then
+      seq = string.format("\027Ptmux;\027%s\027\\", seq)
+    end
+    vim.fn.chansend(vim.v.stderr, seq)
+  end
 end
+
+vim.g.clipboard = {
+  name  = "OSC 52",
+  copy  = { ["+"] = osc52_copy("+"), ["*"] = osc52_copy("*") },
+  paste = {
+    ["+"] = function() return { vim.fn.getreg("+", 1, true), vim.fn.getregtype("+") } end,
+    ["*"] = function() return { vim.fn.getreg("*", 1, true), vim.fn.getregtype("*") } end,
+  },
+}
 o.clipboard = "unnamedplus"
 
 -- Fold (using treesitter — v1.0 API)
