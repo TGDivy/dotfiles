@@ -43,24 +43,21 @@ o.timeoutlen  = 300
 o.completeopt = { "menuone", "noselect" }
 o.pumheight   = 10
 
--- Clipboard — OSC 52 works both locally (Ghostty) and over SSH
--- nvim 0.10+ has a built-in OSC 52 provider
-vim.g.clipboard = {
-  name = "OSC 52",
-  copy = {
-    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-  },
-  paste = {
-    ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-  },
-}
+-- Clipboard — OSC 52 works locally (Ghostty) and over SSH/tmux
+-- Use pcall in case the module path differs across nvim versions
+local ok, osc52 = pcall(require, "vim.ui.clipboard.osc52")
+if ok then
+  vim.g.clipboard = {
+    name  = "OSC 52",
+    copy  = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
+  }
+end
 o.clipboard = "unnamedplus"
 
--- Fold (using treesitter)
+-- Fold (using treesitter — v1.0 API)
 o.foldmethod = "expr"
-o.foldexpr   = "nvim_treesitter#foldexpr()"
+o.foldexpr   = "v:lua.vim.treesitter.foldexpr()"
 o.foldenable = false   -- open all folds by default
 o.foldlevel  = 99
 

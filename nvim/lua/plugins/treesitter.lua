@@ -12,6 +12,8 @@ return {
         "c", "cpp", "python", "lua", "vim", "vimdoc", "cmake", "make",
         "bash", "fish", "json", "yaml", "toml", "markdown", "markdown_inline",
         "git_config", "gitcommit", "diff",
+        "typescript", "javascript", "tsx",
+        "xml",
       },
       auto_install = true,
       highlight = {

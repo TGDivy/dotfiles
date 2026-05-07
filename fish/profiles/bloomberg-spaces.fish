@@ -1,5 +1,8 @@
 # Bloomberg Spaces profile (RHEL8 remote dev environment)
-# No bbvpn — proxy not needed. No brew — apt/dnf only.
+# No bbvpn — proxy pre-configured at devproxy.bloomberg.com:82. No brew.
+
+# Bloomberg tools (node, npm, etc.) live in /opt/bb/bin
+fish_add_path /opt/bb/bin
 
 # PyPI — use Bloomberg index
 set -gx UV_INDEX_URL "https://pypi.bloomberg.com/simple"
