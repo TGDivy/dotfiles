@@ -46,6 +46,41 @@ return {
     },
   },
 
+  -- ── Nvim-tree: sidebar tree view ──────────────────────────────────────────
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { "<leader>n",  "<cmd>NvimTreeToggle<cr>",   desc = "Tree: toggle" },
+      { "<leader>nf", "<cmd>NvimTreeFindFile<cr>", desc = "Tree: find current file" },
+    },
+    opts = {
+      hijack_netrw = false,   -- let Oil handle netrw
+      sync_root_with_cwd = true,
+      respect_buf_cwd    = true,
+      update_focused_file = { enable = true },
+      view = { width = 35, side = "left" },
+      renderer = {
+        group_empty = true,
+        highlight_git = true,
+        icons = {
+          git_placement = "after",
+          glyphs = {
+            git = {
+              unstaged  = "✗", staged = "✓", unmerged = "",
+              renamed   = "➜", untracked = "★", deleted = "", ignored = "◌",
+            },
+          },
+        },
+      },
+      git = { enable = true, ignore = false },
+      actions = {
+        open_file = { quit_on_open = false },
+      },
+      filters = { dotfiles = false },
+    },
+  },
+
   -- ── Trouble: diagnostics / LSP list panel ──────────────────────────────────
   {
     "folke/trouble.nvim",
